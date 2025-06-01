@@ -1,11 +1,11 @@
 const texts = [
   "Em cười xinh lắm đó♥️",
   "Em làm trái tim anh rung động",
-  "Anh sẽ luôn ở đây",
+  "Anh sẽ luôn ở đây😄",
   "You are my sunshine",
-  "1/6 vui vẻ nhaaaaa😄",
   "Chúc em luôn vui vẻ và hạnh phúc!",
   "Lúc nào cũng nhớ em",
+  "Nhớ emmm",
 ];
 let images = [
   "https://res.cloudinary.com/dija8tzko/image/upload/v1748762598/anh1_q1sx3h.png",
