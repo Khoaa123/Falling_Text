@@ -17,9 +17,10 @@ let fallingTextInterval, heartIntervalId, roseIntervalId, starIntervalId;
 let isPaused = false;
 
 const isMobile = window.matchMedia("(max-width: 768px)").matches;
-const maxRotate = isMobile ? 30 : 60;
+const maxRotate = isMobile ? 60 : 60;
 
 const counter = document.createElement("div");
+counter.id = "counter";
 counter.style.position = "fixed";
 counter.style.top = "16px";
 counter.style.right = "24px";
@@ -46,15 +47,45 @@ let rotateX = 0,
   rotateY = 0;
 let targetRotateX = 0,
   targetRotateY = 0;
+let isMouseDown = false;
+let lastMouseDownTime = 0;
+const DOUBLE_CLICK_THRESHOLD = 300;
+
+document.addEventListener("mousedown", (e) => {
+  if (e.button === 0) {
+    const currentTime = Date.now();
+    if (currentTime - lastMouseDownTime < DOUBLE_CLICK_THRESHOLD) {
+      isMouseDown = false;
+      return;
+    }
+    isMouseDown = true;
+    lastMouseDownTime = currentTime;
+    scene.classList.add("grabbing");
+    document.body.classList.add("grabbing");
+  }
+});
+document.addEventListener("mouseup", () => {
+  isMouseDown = false;
+  targetRotateX = rotateX;
+  targetRotateY = rotateY;
+  scene.classList.remove("grabbing");
+  document.body.classList.remove("grabbing");
+});
+document.addEventListener("mouseleave", () => {
+  isMouseDown = false;
+  targetRotateX = rotateX;
+  targetRotateY = rotateY;
+  scene.classList.remove("grabbing");
+  document.body.classList.remove("grabbing");
+});
 
 document.addEventListener("mousemove", (e) => {
-  if (isMobile) return;
+  if (isMobile || !isMouseDown) return;
   const centerX = window.innerWidth / 2;
   const centerY = window.innerHeight / 2;
   targetRotateY = ((e.clientX - centerX) / centerX) * maxRotate;
   targetRotateX = ((e.clientY - centerY) / centerY) * maxRotate;
 });
-
 let touchStartX = 0,
   touchStartY = 0;
 document.addEventListener("touchstart", (e) => {
@@ -154,6 +185,9 @@ function pauseFalling() {
   document.querySelectorAll(".falling-text, .heart, .rose").forEach((el) => {
     el.style.animationPlayState = "paused";
   });
+  document.querySelectorAll(".shooting-star-css").forEach((el) => {
+    el.style.display = "none";
+  });
 }
 
 function resumeFalling() {
@@ -164,6 +198,10 @@ function resumeFalling() {
   starIntervalId = setInterval(createStar, starInterval);
   document.querySelectorAll(".falling-text, .heart, .rose").forEach((el) => {
     el.style.animationPlayState = "running";
+  });
+  document.querySelectorAll(".shooting-star-css").forEach((el) => {
+    el.style.display = "";
+    el.style.opacity = "0.12";
   });
 }
 
@@ -213,7 +251,14 @@ function createHeart(initial = false, initialY = -50) {
   heart.className = "heart";
   heart.innerHTML = `<img src="${
     images[Math.floor(Math.random() * images.length)]
-  }" alt="♡" />`;
+  }" alt="♡" draggable="false" />`;
+  setTimeout(() => {
+    const img = heart.querySelector("img");
+    if (img) {
+      img.addEventListener("dragstart", (e) => e.preventDefault());
+    }
+  }, 0);
+
   const heartSize = isMobile ? 65 : 110;
   const startX = getSafeX(heartSize);
   const zLayer = Math.random() * 400 - 200;
@@ -343,6 +388,55 @@ function createStar() {
   );
 }
 
+function createGalaxyHeart() {
+  const heartPoints = [
+    { x: 0, y: -50 },
+    { x: 30, y: -40 },
+    { x: 50, y: -20 },
+    { x: 60, y: 0 },
+    { x: 50, y: 20 },
+    { x: 30, y: 40 },
+    { x: 0, y: 50 },
+    { x: -30, y: 40 },
+    { x: -50, y: 20 },
+    { x: -60, y: 0 },
+    { x: -50, y: -20 },
+    { x: -30, y: -40 },
+  ];
+  heartPoints.forEach((point, i) => {
+    setTimeout(() => {
+      const star = document.createElement("div");
+      star.className = "star galaxy-star";
+      star.style.left = window.innerWidth / 2 + point.x + "px";
+      star.style.top = window.innerHeight / 2 + point.y + "px";
+      star.style.opacity = "1";
+      star.style.transform = "scale(1)";
+      document.getElementById("starfield").appendChild(star);
+      setTimeout(() => {
+        star.style.transition = "opacity 0.5s, transform 0.5s";
+        star.style.opacity = "0";
+        star.style.transform = "scale(0.5)";
+        setTimeout(() => star.remove(), 500);
+      }, 2000);
+    }, i * 50);
+  });
+}
+
+function createMeteorShower() {
+  const numMeteors = isMobile ? 20 : 40;
+  for (let i = 0; i < numMeteors; i++) {
+    setTimeout(() => {
+      const meteor = document.createElement("div");
+      meteor.className = "meteor-shower";
+      meteor.style.top = Math.random() * 100 + "px";
+      meteor.style.left = Math.random() * window.innerWidth + "px";
+      meteor.style.right = "auto";
+      document.getElementById("starfield").appendChild(meteor);
+      setTimeout(() => meteor.remove(), 3000);
+    }, i * 80);
+  }
+}
+
 function showSpecialAnimation() {
   pauseFalling();
 
@@ -386,6 +480,9 @@ function showSpecialAnimation() {
       explodeHeart(window.innerWidth / 2, window.innerHeight / 2, 0, 40);
     }, 200 + i * 60);
   }
+
+  createGalaxyHeart();
+  createMeteorShower();
 
   setTimeout(() => {
     bigHeart.style.opacity = "0";
