@@ -6,7 +6,6 @@ const texts = [
   "1/6 vui vẻ nhaaaaa😄",
   "Chúc em luôn vui vẻ và hạnh phúc!",
   "Lúc nào cũng nhớ em",
-  "Muốn gặp em quá đi",
 ];
 let images = [
   "https://res.cloudinary.com/dija8tzko/image/upload/v1748762598/anh1_q1sx3h.png",
