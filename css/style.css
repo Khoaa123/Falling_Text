@@ -1,0 +1,425 @@
+html,
+body {
+  overflow-x: hidden !important;
+  width: 100vw !important;
+  max-width: 100vw !important;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  height: 100vh;
+  font-family: "Orbitron", cursive;
+  perspective: 1000px;
+  background: #090909;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  position: relative;
+}
+
+#scene {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.15s ease-out;
+  z-index: 1;
+}
+
+#starfield {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.shooting-star-css {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 3px;
+  height: 3px;
+  background: #fff;
+  border-radius: 50%;
+  opacity: 0.12; /* Mờ hơn nữa */
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.06),
+    0 0 0 6px rgba(255, 255, 255, 0.04), 0 0 20px rgba(255, 255, 255, 0.06);
+  animation: shooting-star-css-anim 6s linear infinite; /* Rơi lâu hơn */
+}
+.shooting-star-css::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  transform: translateY(-50%);
+  width: 260px;
+  height: 1px;
+  opacity: 0.3; /* Đuôi mờ hơn */
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.4), transparent);
+}
+
+/* Vị trí và thời gian cho từng sao băng */
+.shooting-star-css:nth-child(1) {
+  top: 40px;
+  right: 60px;
+  left: initial;
+  animation-delay: 0s;
+  animation-duration: 6s;
+}
+.shooting-star-css:nth-child(2) {
+  top: 120px;
+  right: 220px;
+  left: initial;
+  animation-delay: 1.2s;
+  animation-duration: 7s;
+}
+.shooting-star-css:nth-child(3) {
+  top: 200px;
+  right: 400px;
+  left: initial;
+  animation-delay: 2.1s;
+  animation-duration: 8s;
+}
+.shooting-star-css:nth-child(4) {
+  top: 320px;
+  right: 100px;
+  left: initial;
+  animation-delay: 3s;
+  animation-duration: 7.5s;
+}
+
+.shooting-star-css:nth-child(5) {
+  top: 60px;
+  right: 300px;
+  left: initial;
+  animation-delay: 1.5s;
+  animation-duration: 7.2s;
+}
+.shooting-star-css:nth-child(6) {
+  top: 180px;
+  right: 500px;
+  left: initial;
+  animation-delay: 2.3s;
+  animation-duration: 8.1s;
+}
+.shooting-star-css:nth-child(7) {
+  top: 260px;
+  right: 150px;
+  left: initial;
+  animation-delay: 3.1s;
+  animation-duration: 7.8s;
+}
+.shooting-star-css:nth-child(8) {
+  top: 340px;
+  right: 350px;
+  left: initial;
+  animation-delay: 4s;
+  animation-duration: 7.6s;
+}
+
+.star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.8),
+    0 0 10px rgba(255, 255, 255, 0.5);
+  animation: twinkle 3s infinite ease-in-out;
+}
+
+.star.large {
+  width: 4px;
+  height: 4px;
+  animation-duration: 2s;
+}
+
+.star.slow {
+  animation-duration: 5s;
+}
+
+.falling-text {
+  position: absolute;
+  font-size: 20px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 1;
+  transform-style: preserve-3d;
+  animation: fadeInOut 2s infinite alternate;
+  font-weight: bold;
+  user-select: none;
+  color: #fff;
+}
+
+.falling-text.text-1 {
+  color: #ff69b4;
+  text-shadow: 0 0 8px #ffb6e6, 0 0 16px #ff69b4, 0 0 24px #fff0f6,
+    0 0 32px #ff69b4;
+}
+
+.falling-text.text-2 {
+  color: #8fd3f4;
+  text-shadow: 0 0 8px #b6e0f8, 0 0 16px #ffb6e6, 0 0 24px #fff0f6,
+    0 0 32px #8fd3f4;
+}
+
+.falling-text.text-3 {
+  color: #ffd6e0;
+  text-shadow: 0 0 8px #ffd6e0, 0 0 16px #ffb6e6, 0 0 24px #ffe6b6,
+    0 0 32px #ffb6e6;
+}
+
+.heart,
+.rose {
+  position: absolute;
+  /* pointer-events: none; */
+  opacity: 1;
+  transform-style: preserve-3d;
+  animation: float 4s infinite ease-in-out;
+}
+
+.heart {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  clip-path: url(#heart);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 0 10px rgba(255, 182, 193, 0.8));
+  opacity: 0.9;
+  animation: pulse 2.5s infinite ease-in-out;
+  transition: opacity 1s ease-out;
+  cursor: pointer;
+}
+
+.heart img {
+  width: 110px;
+  height: 110px;
+  object-fit: cover;
+  object-position: center 5%;
+  filter: brightness(0.8);
+  border-radius: 18px;
+  display: block;
+}
+
+.heart.fade-out {
+  opacity: 0;
+  transition: opacity 0.7s;
+}
+
+.rose {
+  color: #e70a0a;
+  font-size: 20px;
+  transform: rotate(45deg);
+  text-shadow: 0 0 5px #ff4040, 0 0 10px #ff6666;
+}
+
+.mini-heart {
+  position: absolute;
+  width: 24px;
+  height: 22px;
+  pointer-events: none;
+  opacity: 1;
+  transition: transform 0.6s cubic-bezier(0.6, -0.28, 0.74, 0.05), opacity 0.6s;
+  will-change: transform, opacity;
+}
+.mini-heart svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.big-heart {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  transform: translate(-50%, -50%) scale(0.5);
+  transition: all 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+.big-heart-inner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.big-heart-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  font-size: 2.2rem;
+  font-weight: bold;
+  text-shadow: 0 0 12px #ff69b4, 0 0 24px #fff0f6;
+  font-family: "Orbitron", cursive;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+  .big-heart-inner {
+    width: 120px !important;
+    height: 110px !important;
+  }
+  .big-heart-text {
+    font-size: 1.1rem !important;
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.3);
+  }
+}
+
+@keyframes fadeInOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.2;
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateY(-10px);
+    opacity: 1;
+  }
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes shooting-star-css-anim {
+  0% {
+    transform: rotate(315deg) translateX(0);
+    opacity: 1;
+  }
+  60% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 0.4;
+  }
+  100% {
+    transform: rotate(315deg) translateX(-1000px);
+    opacity: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .big-heart-text {
+    font-size: 0.95rem !important;
+    width: 80px !important;
+  }
+  .heart {
+    width: 60px;
+    height: 60px;
+  }
+  .heart img {
+    width: 65px;
+    height: 65px;
+  }
+  .rose {
+    font-size: 14px;
+  }
+  .falling-text {
+    font-size: 14px !important;
+  }
+  .mini-heart {
+    width: 16px;
+    height: 14px;
+  }
+}
+
+@keyframes heart-explode-shake {
+  0% {
+    transform: translate(0, 0) rotate(0);
+  }
+  20% {
+    transform: translate(-4px, 2px) rotate(-1deg);
+  }
+  40% {
+    transform: translate(4px, -2px) rotate(1deg);
+  }
+  60% {
+    transform: translate(-2px, 2px) rotate(-1deg);
+  }
+  80% {
+    transform: translate(2px, -2px) rotate(1deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(0);
+  }
+}
+body.heart-explode-shake {
+  animation: heart-explode-shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@media (max-width: 400px) {
+  /* .big-heart-text {
+    font-size: 0.8rem !important;
+    width: 60px !important;
+  } */
+  .heart {
+    width: 40px;
+    height: 40px;
+  }
+  .heart img {
+    width: 44px;
+    height: 44px;
+  }
+  .rose {
+    font-size: 10px;
+  }
+  .falling-text {
+    font-size: 10px !important;
+  }
+  .mini-heart {
+    width: 10px;
+    height: 9px;
+  }
+}
+
+@media (max-width: 600px) {
+  body > div[style*="position: fixed"] {
+    font-size: 16px !important;
+    top: 8px !important;
+    right: 10px !important;
+  }
+}
