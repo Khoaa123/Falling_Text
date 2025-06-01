@@ -423,7 +423,7 @@ function createGalaxyHeart() {
 }
 
 function createMeteorShower() {
-  const numMeteors = isMobile ? 20 : 40;
+  const numMeteors = isMobile ? 12 : 30;
   for (let i = 0; i < numMeteors; i++) {
     setTimeout(() => {
       const meteor = document.createElement("div");
